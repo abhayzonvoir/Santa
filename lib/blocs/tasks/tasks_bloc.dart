@@ -21,7 +21,7 @@ class TasksBloc extends Bloc<TaskEvent, TasksState> {
   Future<void> _onLoadTask(LoadTask event, Emitter<TasksState> emit) async {
     emit(TasksLoading());
     try {
-      final tasks = await _taskRepository.getTask();
+      final tasks = await _taskRepository.getTasks();
       emit(TasksLoaded(tasks: tasks));
     } catch (e) {
       emit(TasksError(e.toString()));

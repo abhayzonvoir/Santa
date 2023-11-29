@@ -7,22 +7,25 @@ part 'task.g.dart';
 @JsonSerializable()
 class Task {
   final int id;
-  final int userId;
-  final String title;
+  final String name;
+  final String country;
+  final String status;
   bool isComplete;
 
   Task({
     required this.id,
-    required this.userId,
-    required this.title,
+    required this.name,
+    required this.country,
+    required this.status,
     this.isComplete = false,
   });
 
-  copyWith({int? id, int? userId, String? title, bool? isComplete}) {
+  copyWith({int? id, String? name, String? country,String? status, bool? isComplete}) {
     return Task(
         id: id ?? this.id,
-        userId: userId ?? this.userId,
-        title: title ?? this.title,
+        name: name ?? this.name,
+        country: country ?? this.country,
+        status: status ?? this.status,
         isComplete: isComplete ?? this.isComplete);
   }
 

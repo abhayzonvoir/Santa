@@ -10,7 +10,7 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String taskStatus = task.isComplete ? 'Complete' : 'On-going';
+    String taskStatus = task.isComplete ? 'Naughty' : 'Nice';
     return BlocListener<TasksBloc, TasksState>(
       listener: (context, state) {},
       child: Card(
@@ -33,7 +33,7 @@ class TaskWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  task.title,
+                  ' Child name : ${task.name}',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: task.isComplete
@@ -45,7 +45,7 @@ class TaskWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'by User ${task.userId}',
+                      ' Country : ${task.country}',
                       style: TextStyle(
                           color: task.isComplete
                               ? Colors.grey

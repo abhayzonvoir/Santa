@@ -9,7 +9,6 @@ import 'package:todo_material_you/widgets/task.dart';
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -17,7 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ToDo M-You App',
+      title: 'App for Santa - Development Challenge',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           useMaterial3: true,
           primaryColor: const Color(0XFFceef86),
@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
             BlocProvider(
                 create: (context) => TasksBloc(
                       RepositoryProvider.of<TaskRepository>(context),
-                    )..add(LoadTask()))
+                    )..add(const LoadTask()))
           ],
-          child: MyHomePage(title: 'Your Tasks'),
+          child: const MyHomePage(title: 'Santa Application'),
         ),
       ),
     );
@@ -48,47 +48,86 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController textInputTitleController;
-  late TextEditingController textInputUserIdController;
+  late TextEditingController textInputNamesController;
+  late TextEditingController textInputCountriesController;
+  late TextEditingController textInputStatusController;
 
   @override
   void initState() {
     super.initState();
 
-    textInputTitleController = TextEditingController();
-    textInputUserIdController = TextEditingController();
+    textInputNamesController = TextEditingController();
+    textInputCountriesController = TextEditingController();
+    textInputStatusController = TextEditingController();
   }
 
   @override
   void dispose() {
-    textInputTitleController.dispose();
-    textInputUserIdController.dispose();
+    textInputNamesController.dispose();
+    textInputCountriesController.dispose();
+    textInputStatusController.dispose();
     super.dispose();
   }
 
   Future<Task?> _openDialog(int lastId) {
-    textInputTitleController.text = '';
-    textInputUserIdController.text = '';
+    textInputNamesController.text = '';
+    textInputCountriesController.text = '';
+    textInputStatusController.text = '';
+
     return showDialog<Task>(
         context: context,
         builder: (context) => AlertDialog(
-              backgroundColor: const Color(0XFFfeddaa),
-              title: TextField(
-                  controller: textInputTitleController,
-                  decoration: const InputDecoration(
-                      fillColor: Color(0XFF322a1d),
-                      hintText: 'Task Title',
-                      border: InputBorder.none)),
-              content: TextField(
-                  controller: textInputUserIdController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+              backgroundColor: Colors.lightBlue,
+              title: const Text("Enter children details",style: TextStyle(color: Colors.white,fontWeight: FontWeight.normal),),
+              content: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: TextField(
+                          controller: textInputNamesController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              hintText: 'Child name',
+                              border: InputBorder.none,
+                              filled: false)),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: TextField(
+                          controller: textInputCountriesController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              hintText: 'Child countries',
+                              border: InputBorder.none,
+                              filled: false)),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: TextField(
+                          controller: textInputStatusController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              hintText: 'Child status',
+                              border: InputBorder.none,
+                              filled: false)),
+                    ),
                   ],
-                  decoration: const InputDecoration(
-                      hintText: 'User ID',
-                      border: InputBorder.none,
-                      filled: true)),
+                ),
+              ),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -96,20 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     child: const Text(
                       'Cancel',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.white),
                     )),
                 TextButton(
                     onPressed: (() {
-                      if (textInputTitleController.text != '' &&
-                          textInputUserIdController.text != '') {
+                      if (textInputNamesController.text != '' &&
+                          textInputCountriesController.text != '' &&
+                          textInputStatusController.text != '') {
                         Navigator.of(context).pop(Task(
                             id: lastId + 1,
-                            userId: int.parse(textInputUserIdController.text),
-                            title: textInputTitleController.text));
+                            name: textInputNamesController.text,
+                            country: textInputCountriesController.text,
+                            status: textInputStatusController.text));
                       }
                     }),
                     child: const Text('Add',
-                        style: TextStyle(color: Color(0xFF322a1d))))
+                        style: TextStyle(color: Colors.white)))
               ],
             ));
   }
@@ -160,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           } else {
-            return const Text('No Task Found');
+            return const Text('No Record  Found');
           }
         },
       ),
@@ -169,24 +210,29 @@ class _MyHomePageState extends State<MyHomePage> {
           if (state is TasksLoaded) {
             lastId = state.tasks.last.id;
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Task Updated!'),
+              content: Text('Record Updated!'),
             ));
           }
         },
-        child: FloatingActionButton(
-          backgroundColor: const Color(0xFFf8bd47),
-          foregroundColor: const Color(0xFF322a1d),
+        child:ElevatedButton(
           onPressed: () async {
+            // Open the dialog to get the task details
             Task? task = await _openDialog(lastId ?? 0);
+
+            // Check if a task was returned
             if (task != null) {
+              // Add the task using the TasksBloc
               context.read<TasksBloc>().add(
-                    AddTask(task: task),
-                  );
+                AddTask(task: task),
+              );
             }
           },
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ),
+          child: const Text(
+            "Add New Kid",
+            style: TextStyle(color: Colors.blue),
+          ),
+        )
+
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
